@@ -1,0 +1,20 @@
+<svg width="400" height="400" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Outer double circles - White -->
+  <circle cx="200" cy="200" r="195" fill="none" stroke="white" stroke-width="4" />
+  <circle cx="200" cy="200" r="188" fill="none" stroke="white" stroke-width="1.5" />
+
+  <g transform="translate(200, 200)">
+    <!-- Stylized Pink X -->
+    <path d="M-18 -32 L18 32 M18 -32 L-18 32" stroke="#db2777" stroke-width="20" stroke-linecap="round" fill="none" />
+    <path d="M-22 -35 Q-55 -60, -28 -18 Q-38 -28, -22 -32" fill="#db2777" />
+    
+    <!-- Text: cream -->
+    <text x="-65" y="14" font-family="serif" font-size="40" font-weight="900" text-anchor="end" fill="white">cream</text>
+    
+    <!-- Text: emirates -->
+    <text x="65" y="14" font-family="serif" font-size="40" font-weight="900" text-anchor="start" fill="white">emirates</text>
+    
+    <!-- Instagram Handle -->
+    <text x="0" y="85" font-family="sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="rgba(255,255,255,0.9)" letter-spacing="1.5">@creamxemirates_official_</text>
+  </g>
+</svg>

@@ -1,0 +1,132 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --brand: #db2777;
+  --brand-dark: #be185d;
+  --brand-light: #fdf2f8;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-brand: var(--brand);
+  --color-brand-dark: var(--brand-dark);
+  --color-brand-light: var(--brand-light);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* ========== RESPONSIVE UTILITIES ========== */
+
+/* Mobile-first approach */
+@media (max-width: 1920px) {
+  :root {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 1366px) {
+  :root {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 1024px) {
+  :root {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+  
+  /* Stack buttons on mobile */
+  .mobile-stack {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  /* Full width modals on tablet and below */
+  .modal {
+    width: calc(100vw - 32px) !important;
+    max-width: 100% !important;
+  }
+}
+
+@media (max-width: 640px) {
+  body {
+    font-size: 13px;
+  }
+  
+  /* Extra padding on small screens */
+  main {
+    padding: 12px !important;
+  }
+  
+  /* Small screens: remove horizontal scrolling */
+  * {
+    max-width: 100%;
+  }
+  
+  /* Better touch targets on mobile */
+  button, input, select, textarea {
+    min-height: 44px;
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+  
+  /* Full width modals on mobile */
+  .modal {
+    width: calc(100vw - 24px) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    font-size: 12px;
+  }
+  
+  /* Tight padding on small phones */
+  main {
+    padding: 8px !important;
+  }
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none;
+  }
+}
+
+/* High DPI screens */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  /* Optional: add high DPI specific styles if needed */
+}
+
+/* Landscape orientation on mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+  main {
+    padding: 8px !important;
+  }
+  
+  h1 {
+    font-size: 18px !important;
+  }
+}
