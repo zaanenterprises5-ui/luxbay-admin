@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
+import { fetchWithAuth } from "../lib/fetchWithAuth";
 
 /* ─── Types ─────────────────────────────────────────── */
 type SizeEntry = { size: string; stock: string; price: string };
@@ -65,8 +66,7 @@ export default function Products() {
 
   const fetchProducts = useCallback(async () => {
     try {
-      const authToken = token();
-      const res = await fetch(`${api}/product`, { headers: { Authorization: authToken } });
+      const res = await fetchWithAuth(`${api}/product`);
       const data = await res.json();
       if (data.products) setProducts(data.products);
     } catch (e) { console.error(e); }
@@ -123,9 +123,33 @@ export default function Products() {
   };
 
   const removeImage = (vi: number, ii: number) => {
-    setVariants(prev => prev.map((v, idx) =>
-      idx === vi ? { ...v, images: v.images.filter((_, i) => i !== ii) } : v
-    ));
+    (async () => {
+      const v = variants[vi];
+      if (!v) return;
+      const src = v.images[ii];
+      if (!src) return;
+
+      // if it's a remote url (not base64), request backend to delete from Cloudinary
+      if (!src.startsWith("data:image")) {
+        if (!confirm("Delete this image from server and product?")) return;
+        try {
+          const res = await fetchWithAuth(`${api}/product/image/delete`, {
+            method: "POST",
+            body: { url: src },
+          });
+          if (!res.ok) {
+            console.warn('Failed to delete remote image');
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      // remove locally regardless
+      setVariants(prev => prev.map((v2, idx) =>
+        idx === vi ? { ...v2, images: v2.images.filter((_, i) => i !== ii) } : v2
+      ));
+    })();
   };
 
   const addSize = (vi: number) => {
@@ -199,11 +223,7 @@ export default function Products() {
         : `${api}/product/add`;
       const method = editId ? "PUT" : "POST";
 
-      const res = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json", Authorization: token() },
-        body: JSON.stringify(payload),
-      });
+      const res = await fetchWithAuth(url, { method, body: payload });
       const data = await res.json();
       if (!res.ok) { setError(data.error || "Failed"); return; }
 
@@ -242,9 +262,9 @@ export default function Products() {
   /* ── Delete ── */
   const remove = async (id: string) => {
     if (!confirm("Delete this product?")) return;
-    const res = await fetch(`${api}/product/delete/${id}`, {
-      method: "DELETE", headers: { Authorization: token() },
-    });
+    const authToken = token();
+    if (!authToken) { alert('Not logged in — please sign in to perform this action.'); return; }
+    const res = await fetchWithAuth(`${api}/product/delete/${id}`, { method: "DELETE" });
     if (res.ok) setProducts(prev => prev.filter(p => p._id !== id));
   };
 

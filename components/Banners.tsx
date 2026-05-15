@@ -1,12 +1,17 @@
 "use client";
 import { useState, useEffect, useCallback, ReactNode } from "react";
 import Image from "next/image";
+import { fetchWithAuth } from "../lib/fetchWithAuth";
 
 type Banner = {
   _id: string;
   desktopImage: string;
   mobileImage: string;
   isActive: boolean;
+  desktopFit: string;
+  desktopPosition: string;
+  mobileFit: string;
+  mobilePosition: string;
 };
 
 type FieldProps = { label: string; children: ReactNode };
@@ -16,6 +21,10 @@ export default function Banners() {
   const [showModal, setShowModal] = useState(false);
   const [desktopImage, setDesktopImage] = useState("");
   const [mobileImage, setMobileImage] = useState("");
+  const [desktopFit, setDesktopFit] = useState("cover");
+  const [desktopPosition, setDesktopPosition] = useState("center");
+  const [mobileFit, setMobileFit] = useState("cover");
+  const [mobilePosition, setMobilePosition] = useState("center");
   const [loading, setLoading] = useState(false);
   const api = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
@@ -57,11 +66,16 @@ export default function Banners() {
     if (!desktopImage || !mobileImage) return;
     setLoading(true);
     try {
-      const authToken = localStorage.getItem("token") || "";
-      const res = await fetch(`${api}/banner/add`, {
+      const res = await fetchWithAuth(`${api}/banner/add`, {
         method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: authToken },
-        body: JSON.stringify({ desktopImage, mobileImage }),
+        body: {
+          desktopImage,
+          mobileImage,
+          desktopFit,
+          desktopPosition,
+          mobileFit,
+          mobilePosition,
+        },
       });
       if (res.ok) {
         const data = await res.json();
@@ -81,11 +95,10 @@ export default function Banners() {
   };
 
   const remove = async (id: string) => {
+    if (!confirm("Delete this banner?")) return;
     const authToken = localStorage.getItem("token") || "";
-    const res = await fetch(`${api}/banner/delete/${id}`, {
-      method: "DELETE",
-      headers: { Authorization: authToken },
-    });
+    if (!authToken) { alert('Not logged in — please sign in to perform this action.'); return; }
+    const res = await fetchWithAuth(`${api}/banner/delete/${id}`, { method: "DELETE" });
     if (res.ok) setBanners(prev => prev.filter(b => b._id !== id));
   };
 
@@ -129,6 +142,26 @@ export default function Banners() {
         @media (max-width: 640px) {
           .overlay { padding: 12px; }
           .banner-preview-image { height: 120px !important; }
+        }
+
+        .select-input {
+          background: #1e1e2e;
+          border: 1px solid #33334d;
+          color: #e8e8f0;
+          border-radius: 6px;
+          padding: 8px;
+          font-size: 12px;
+          width: 100%;
+          outline: none;
+        }
+        .select-input:focus {
+          border-color: var(--brand);
+        }
+        .options-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 12px;
+          margin-top: 8px;
         }
       `}</style>
 
@@ -206,6 +239,25 @@ export default function Banners() {
                   )}
                   <input className="upload-input" type="file" accept="image/*" onChange={(e) => handleFile(e, "desktop")} />
                 </label>
+                <div className="options-grid">
+                  <div>
+                    <div style={{ fontSize: 10, color: "#555570", marginBottom: 4 }}>Fit</div>
+                    <select className="select-input" value={desktopFit} onChange={(e) => setDesktopFit(e.target.value)}>
+                      <option value="cover">Cover (Fill)</option>
+                      <option value="contain">Contain (Full Image)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 10, color: "#555570", marginBottom: 4 }}>Position</div>
+                    <select className="select-input" value={desktopPosition} onChange={(e) => setDesktopPosition(e.target.value)}>
+                      <option value="center">Center</option>
+                      <option value="top">Top</option>
+                      <option value="bottom">Bottom</option>
+                      <option value="left">Left</option>
+                      <option value="right">Right</option>
+                    </select>
+                  </div>
+                </div>
               </Field>
 
               <Field label="Mobile Image (Required)">
@@ -231,6 +283,25 @@ export default function Banners() {
                   )}
                   <input className="upload-input" type="file" accept="image/*" onChange={(e) => handleFile(e, "mobile")} />
                 </label>
+                <div className="options-grid">
+                  <div>
+                    <div style={{ fontSize: 10, color: "#555570", marginBottom: 4 }}>Fit</div>
+                    <select className="select-input" value={mobileFit} onChange={(e) => setMobileFit(e.target.value)}>
+                      <option value="cover">Cover (Fill)</option>
+                      <option value="contain">Contain (Full Image)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 10, color: "#555570", marginBottom: 4 }}>Position</div>
+                    <select className="select-input" value={mobilePosition} onChange={(e) => setMobilePosition(e.target.value)}>
+                      <option value="center">Center</option>
+                      <option value="top">Top</option>
+                      <option value="bottom">Bottom</option>
+                      <option value="left">Left</option>
+                      <option value="right">Right</option>
+                    </select>
+                  </div>
+                </div>
               </Field>
             </div>
 

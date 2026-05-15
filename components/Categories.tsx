@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useCallback, ReactNode } from "react";
 import Image from "next/image";
+import { fetchWithAuth } from "../lib/fetchWithAuth";
 
 type Category = { _id: string; name: string; image?: string };
 
@@ -103,11 +104,9 @@ export default function Categories() {
         if (imagePreview && imagePreview.startsWith("data:image")) {
           updatePayload.image = imagePreview;
         }
-        const authToken = token();
-        const res = await fetch(`${api}/category/${editId}`, {
+        const res = await fetchWithAuth(`${api}/category/${editId}`, {
           method: "PUT",
-          headers: { "Content-Type": "application/json", Authorization: authToken },
-          body: JSON.stringify({ category: updatePayload }),
+          body: { category: updatePayload },
         });
         const data = await res.json();
         if (data.success) {
@@ -123,16 +122,14 @@ export default function Categories() {
           alert((data.error || "Failed to save.") + (data.message ? "\n\n" + data.message : ""));
         }
       } else {
-        const authToken = token();
-        const res = await fetch(`${api}/category/add`, {
+        const res = await fetchWithAuth(`${api}/category/add`, {
           method: "POST",
-          headers: { "Content-Type": "application/json", Authorization: authToken },
-          body: JSON.stringify({
+          body: {
             name,
             description: "Added from Admin",
             isActive: true,
             image: imagePreview || undefined,
-          }),
+          },
         });
         const data = await res.json();
         if (data.success) {
@@ -150,10 +147,8 @@ export default function Categories() {
     if (!confirm("Delete this category?")) return;
     try {
       const authToken = token();
-      const res = await fetch(`${api}/category/delete/${id}`, {
-        method: "DELETE",
-        headers: { Authorization: authToken },
-      });
+      if (!authToken) { alert('Not logged in — please sign in to perform this action.'); return; }
+      const res = await fetchWithAuth(`${api}/category/delete/${id}`, { method: "DELETE" });
       const data = await res.json();
       if (data.success) setCategories(prev => prev.filter(c => c._id !== id));
       else alert(data.error || "Failed to delete.");
@@ -273,7 +268,22 @@ export default function Categories() {
                 </label>
                 {imagePreview && (
                   <button
-                    onClick={() => setImagePreview(null)}
+                    onClick={async () => {
+                      // if preview is already an uploaded url, request backend to delete from Cloudinary
+                      if (!imagePreview.startsWith("data:image")) {
+                        if (!confirm("Delete this image from server?")) return;
+                        try {
+                          const res = await fetchWithAuth(`${api}/product/image/delete`, {
+                            method: "POST",
+                            body: { url: imagePreview },
+                          });
+                          if (!res.ok) console.warn('Failed to delete image on server');
+                        } catch (e) {
+                          console.error(e);
+                        }
+                      }
+                      setImagePreview(null);
+                    }}
                     style={{ marginTop: 6, background: "transparent", border: "none", color: "#ef4444", fontSize: 12, cursor: "pointer" }}
                   >
                     Remove image
