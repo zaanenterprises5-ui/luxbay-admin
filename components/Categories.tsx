@@ -106,6 +106,7 @@ export default function Categories() {
         }
         const res = await fetchWithAuth(`${api}/category/${editId}`, {
           method: "PUT",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ category: updatePayload }),
         });
         const data = await res.json();
@@ -124,6 +125,7 @@ export default function Categories() {
       } else {
         const res = await fetchWithAuth(`${api}/category/add`, {
           method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             name,
             description: "Added from Admin",
