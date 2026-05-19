@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Cream X Emirates Admin",
+  title: "Lexvaro Admin",
   description: "Admin control center for managing products, categories, and banners",
 };
 

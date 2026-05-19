@@ -351,8 +351,8 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
         {/* Logo Section */}
         <div className="sidebar-header" style={{ textAlign: 'center' }}>
           <Image
-            src="/images/logo-white.svg"
-            alt="Cream X Emirates Admin"
+            src="/images/logo.png"
+            alt="Lexvaro Admin"
             width={160}
             height={160}
             style={{ margin: '0 auto', display: 'block' }}
