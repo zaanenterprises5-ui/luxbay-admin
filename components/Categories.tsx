@@ -8,7 +8,7 @@ type Category = { _id: string; name: string; image?: string };
 const CSS = `
   .card { background: #13131a; border: 1px solid #1e1e2e; border-radius: 12px; transition: border-color 0.18s; }
   .card:hover { border-color: #2a2a40; }
-  .active-card { border-color: var(--brand) !important; box-shadow: 0 0 15px rgba(219, 39, 119, 0.1); }
+  .active-card { border-color: var(--brand) !important; box-shadow: 0 0 15px rgba(190, 24, 93, 0.1); }
   .btn-primary { background: var(--brand); color: #fff; border: none; border-radius: 8px; padding: 10px 20px; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.15s; }
   .btn-primary:hover:not(:disabled) { background: var(--brand-dark); }
   .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }

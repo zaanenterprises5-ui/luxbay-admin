@@ -207,7 +207,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
 
         .nav-item.active {
           color: var(--brand);
-          background: linear-gradient(90deg, rgba(219, 39, 119, 0.1) 0%, transparent 100%);
+          background: linear-gradient(90deg, rgba(190, 24, 93, 0.1) 0%, transparent 100%);
           border-left-color: var(--brand);
           font-weight: 600;
         }

@@ -91,7 +91,7 @@ export default function LoginPage() {
         maxWidth: "400px"
       }}>
         <h1 style={{ color: "#fff", marginBottom: "24px", fontFamily: "'Syne', sans-serif", fontSize: "24px", textAlign: "center" }}>
-          X EMIRATES ADMIN
+          LEXVARO ADMIN
         </h1>
 
         {error && (
