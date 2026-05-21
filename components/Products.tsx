@@ -182,6 +182,12 @@ export default function Products() {
     ));
   };
 
+  const applyPreset = (vi: number, labels: string[]) => {
+    setVariants(prev => prev.map((v, idx) =>
+      idx === vi ? { ...v, sizes: labels.map(l => ({ size: l, stock: "10", price: "" })) } : v
+    ));
+  };
+
   const updateSize = (vi: number, si: number, field: keyof SizeEntry, value: string) => {
     setVariants(prev => prev.map((v, idx) =>
       idx === vi ? { ...v, sizes: v.sizes.map((s, i) => i === si ? { ...s, [field]: value } : s) } : v
@@ -376,7 +382,7 @@ export default function Products() {
                       }
                       <div>
                         <div style={{ fontWeight: 600 }}>{p.name}</div>
-                        {def && <div style={{ fontSize: 11, color: "#555570" }}>${Number(def.price).toFixed(2)}</div>}
+                        {def && <div style={{ fontSize: 11, color: "#555570" }}>₹{Number(def.price).toFixed(2)}</div>}
                       </div>
                     </div>
                   </td>
@@ -463,6 +469,7 @@ export default function Products() {
                   onAddSize={addSize}
                   onUpdateSize={updateSize}
                   onRemoveSize={removeSize}
+                  onApplyPreset={applyPreset}
                 />
               ))}
             </div>
@@ -493,7 +500,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 /* ─── VariantCard ────────────────────────────────────── */
 function VariantCard({
   variant, index, total, onUpdate, onRemove, onSetDefault, onAddImages, onRemoveImage,
-  onAddSize, onUpdateSize, onRemoveSize,
+  onAddSize, onUpdateSize, onRemoveSize, onApplyPreset,
 }: {
   variant: Variant;
   index: number;
@@ -506,6 +513,7 @@ function VariantCard({
   onAddSize: (vi: number) => void;
   onUpdateSize: (vi: number, si: number, field: keyof SizeEntry, value: string) => void;
   onRemoveSize: (vi: number, si: number) => void;
+  onApplyPreset: (vi: number, labels: string[]) => void;
 }) {
   return (
     <div className={`variant-card${variant.isDefault ? " default" : ""}`}>
@@ -616,6 +624,35 @@ function VariantCard({
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
           <span style={{ fontSize: 12, fontWeight: 600, color: "var(--brand)" }}>Quantity</span>
           <button className="btn-sm" onClick={() => onAddSize(index)}>+ Add Quantity</button>
+        </div>
+
+        {/* Quick Presets */}
+        <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 12 }}>
+          <span style={{ fontSize: 10, color: "#555570", alignSelf: "center", fontWeight: 700, textTransform: "uppercase" }}>Presets:</span>
+          <button 
+            type="button" 
+            className="btn-sm" 
+            style={{ background: "#1a1a24", border: "1px solid #33334d", color: "#c4c4e0", padding: "3px 8px", fontSize: "10px" }}
+            onClick={() => onApplyPreset(index, ["S", "M", "L", "XL"])}
+          >👕 Shirts (S-XL)</button>
+          <button 
+            type="button" 
+            className="btn-sm" 
+            style={{ background: "#1a1a24", border: "1px solid #33334d", color: "#c4c4e0", padding: "3px 8px", fontSize: "10px" }}
+            onClick={() => onApplyPreset(index, ["28", "30", "32", "34", "36"])}
+          >👖 Pants (28-36)</button>
+          <button 
+            type="button" 
+            className="btn-sm" 
+            style={{ background: "#1a1a24", border: "1px solid #33334d", color: "#c4c4e0", padding: "3px 8px", fontSize: "10px" }}
+            onClick={() => onApplyPreset(index, ["UK 6", "UK 7", "UK 8", "UK 9", "UK 10"])}
+          >👟 Shoes (6-10)</button>
+          <button 
+            type="button" 
+            className="btn-sm" 
+            style={{ background: "#1a1a24", border: "1px solid #33334d", color: "#c4c4e0", padding: "3px 8px", fontSize: "10px" }}
+            onClick={() => onApplyPreset(index, ["One Size"])}
+          >📦 One Size</button>
         </div>
         {variant.sizes.length === 0 && (
           <p style={{ fontSize: 11, color: "#44445a", margin: 0 }}>No sizes added</p>

@@ -9,7 +9,7 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [checking, setChecking] = useState(true);
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:5001/api';
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:5002/api';
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -38,12 +38,14 @@ export default function LoginPage() {
         throw new Error("Password must be at least 3 characters");
       }
 
-      console.log("Attempting login with:", { email, apiUrl });
+      const normalizedEmail = email.toLowerCase().trim();
+
+      console.log("Attempting login with:", { email: normalizedEmail, apiUrl });
 
       const res = await fetch(`${apiUrl}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email: normalizedEmail, password }),
       });
 
       console.log("Response status:", res.status);
@@ -51,6 +53,7 @@ export default function LoginPage() {
       if (!res.ok) {
         const data = await res.json();
         console.error("Login error response:", data);
+        setError(data.error || "Login failed"); // Display error to the user
         throw new Error(data.error || "Login failed");
       }
 
@@ -59,6 +62,7 @@ export default function LoginPage() {
 
       if (data.token) {
         localStorage.setItem("token", data.token);
+        localStorage.setItem("email", email);
         console.log("Token saved successfully, redirecting to admin panel");
         router.push("/admin/categories");
       } else {

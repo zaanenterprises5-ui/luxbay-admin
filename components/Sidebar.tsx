@@ -1,4 +1,5 @@
 "use client";
+import { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
 
@@ -57,6 +58,15 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
   const router = useRouter();
   const pathname = usePathname();
 
+  const [userEmail, setUserEmail] = useState("admin@lexvaro.com");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const email = localStorage.getItem("email");
+      if (email) setUserEmail(email);
+    }
+  }, []);
+
   const handleNavClick = (path: string) => {
     router.push(path);
     // Close sidebar on mobile after navigation
@@ -67,6 +77,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("email");
     router.replace("/login");
   };
 
@@ -100,7 +111,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
           border-right: 1px solid #1e1e2e;
           display: flex;
           flex-direction: column;
-          padding: 28px 0;
+          padding: 24px 0;
           transform: translateX(-100%);
           transition: transform 0.3s ease-out;
           z-index: 50;
@@ -139,7 +150,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
 
         /* Sidebar header/logo */
         .sidebar-header {
-          padding: 0 24px 32px;
+          padding: 0 24px 24px;
           border-bottom: 1px solid #1e1e2e;
         }
 
@@ -349,15 +360,30 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
       {/* Sidebar */}
       <aside className={`sidebar${isSidebarOpen ? " open" : ""}`} role="navigation">
         {/* Logo Section */}
-        <div className="sidebar-header" style={{ textAlign: 'center' }}>
-          <Image
-            src="/images/logo.png"
-            alt="Lexvaro Admin"
-            width={160}
-            height={160}
-            style={{ margin: '0 auto', display: 'block' }}
-          />
-          <p className="sidebar-subtext">CONTROL PANEL</p>
+        <div className="sidebar-header" style={{ textAlign: 'center', padding: '20px 16px 16px' }}>
+          <div style={{
+            background: "#ffffff",
+            borderRadius: "12px",
+            padding: "8px",
+            margin: "0 auto 10px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: "100px",
+            height: "100px",
+            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
+            border: "1px solid #1e1e2e",
+          }}>
+            <Image
+              src="/images/logo.png"
+              alt="Lexvaro Admin"
+              width={84}
+              height={84}
+              style={{ objectFit: 'contain', width: '100%', height: '100%' }}
+              priority
+            />
+          </div>
+          <p className="sidebar-subtext" style={{ marginTop: '4px' }}>CONTROL PANEL</p>
         </div>
 
         {/* Navigation */}
@@ -380,10 +406,10 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
         {/* Footer Section */}
         <div className="sidebar-footer">
           <div className="user-profile">
-            <div className="user-avatar">A</div>
+            <div className="user-avatar">{userEmail.charAt(0).toUpperCase()}</div>
             <div className="user-info">
               <p className="user-name">Admin</p>
-              <p className="user-email">admin@store.com</p>
+              <p className="user-email">{userEmail}</p>
             </div>
           </div>
           <button className="logout-btn" onClick={handleLogout}>

@@ -227,7 +227,7 @@ export default function Banners() {
                         height={150}
                         style={{ width: "100%", height: "100%", borderRadius: 6, objectFit: "cover" }}
                       />
-                      <div style={{ position: "absolute", top: 8, right: 8, background: "#7c3aed", color: "#fff", padding: "4px 8px", borderRadius: 4, fontSize: 11, fontWeight: 600 }}>
+                      <div style={{ position: "absolute", top: 8, right: 8, background: "var(--brand)", color: "#fff", padding: "4px 8px", borderRadius: 4, fontSize: 11, fontWeight: 600 }}>
                         Selected
                       </div>
                     </div>
@@ -259,7 +259,7 @@ export default function Banners() {
                   </div>
                 </div>
               </Field>
-
+ 
               <Field label="Mobile Image (Required)">
                 <label className="upload-box" style={{ cursor: "pointer", padding: "20px 16px" }}>
                   {mobileImage ? (
@@ -271,7 +271,7 @@ export default function Banners() {
                         height={150}
                         style={{ width: "100%", height: "100%", borderRadius: 6, objectFit: "cover" }}
                       />
-                      <div style={{ position: "absolute", top: 8, right: 8, background: "#7c3aed", color: "#fff", padding: "4px 8px", borderRadius: 4, fontSize: 11, fontWeight: 600 }}>
+                      <div style={{ position: "absolute", top: 8, right: 8, background: "var(--brand)", color: "#fff", padding: "4px 8px", borderRadius: 4, fontSize: 11, fontWeight: 600 }}>
                         Selected
                       </div>
                     </div>

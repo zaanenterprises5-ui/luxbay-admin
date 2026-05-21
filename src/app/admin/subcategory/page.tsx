@@ -91,13 +91,13 @@ export default function Subcategories() {
       <style>{`
         .card { background: #13131a; border: 1px solid #1e1e2e; border-radius: 12px; transition: border-color 0.18s; }
         .card:hover { border-color: #2a2a40; }
-        .btn-primary { background: #7c3aed; color: #fff; border: none; border-radius: 8px; padding: 10px 20px; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.15s; }
-        .btn-primary:hover:not(:disabled) { background: #6d28d9; }
+        .btn-primary { background: var(--brand); color: #fff; border: none; border-radius: 8px; padding: 10px 20px; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.15s; }
+        .btn-primary:hover:not(:disabled) { background: var(--brand-dark); }
         .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
         .btn-ghost { background: transparent; color: #555570; border: 1px solid #1e1e2e; border-radius: 8px; padding: 8px 14px; font-size: 12px; cursor: pointer; transition: all 0.15s; }
         .btn-ghost:hover { color: #ef4444; border-color: #ef444440; }
         .input { background: #0f0f13; border: 1px solid #1e1e2e; border-radius: 8px; color: #e8e8f0; font-size: 13px; padding: 10px 14px; width: 100%; outline: none; transition: border-color 0.15s; box-sizing: border-box; }
-        .input:focus { border-color: #7c3aed; }
+        .input:focus { border-color: var(--brand); }
         .overlay { position: fixed; inset: 0; background: #000000aa; display: flex; align-items: center; justify-content: center; z-index: 100; padding: 16px; }
       `}</style>
 
