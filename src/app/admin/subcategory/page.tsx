@@ -11,7 +11,7 @@ export default function Subcategories() {
   const [editId, setEditId] = useState<string | null>(null);
   const [name, setName] = useState("");
   const [saving, setSaving] = useState(false);
-  const api = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+  const api = process.env.NEXT_PUBLIC_API_URL || 'https://lexvaro-backend.onrender.com/api';
 
   const fetchSubcategories = useCallback(async () => {
     try {

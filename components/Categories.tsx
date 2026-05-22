@@ -38,7 +38,7 @@ export default function Categories() {
   const [name, setName] = useState("");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
-  const api = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+  const api = process.env.NEXT_PUBLIC_API_URL || 'https://lexvaro-backend.onrender.com/api';
   const token = () => localStorage.getItem("token") || "";
 
   const [expandedId, setExpandedId] = useState<string | null>(null);

@@ -26,7 +26,7 @@ export default function Banners() {
   const [mobileFit, setMobileFit] = useState("cover");
   const [mobilePosition, setMobilePosition] = useState("center");
   const [loading, setLoading] = useState(false);
-  const api = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+  const api = process.env.NEXT_PUBLIC_API_URL || 'https://lexvaro-backend.onrender.com/api';
 
   const fetchBanners = useCallback(async () => {
     try {
