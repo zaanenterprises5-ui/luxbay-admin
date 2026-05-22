@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useCallback, ReactNode } from "react";
-import { getApiUrl } from "../../../lib/getApiUrl";
+import { getApiUrl } from "../../../../lib/getApiUrl";
 type SubCategory = { _id: string; name: string };
 type FieldProps = { label: string; children: ReactNode };
 type HeaderProps = { title: string; sub: string; onAdd: () => void };
