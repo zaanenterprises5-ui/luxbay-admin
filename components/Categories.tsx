@@ -2,6 +2,7 @@
 import { useState, useEffect, useCallback, ReactNode } from "react";
 import Image from "next/image";
 import { fetchWithAuth } from "../lib/fetchWithAuth";
+import { getApiUrl } from "../lib/getApiUrl";
 
 type Category = { _id: string; name: string; image?: string };
 
@@ -38,9 +39,8 @@ export default function Categories() {
   const [name, setName] = useState("");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
-  const api = process.env.NEXT_PUBLIC_API_URL || 'https://lexvaro-backend.onrender.com/api';
+  const api = getApiUrl();
   const token = () => localStorage.getItem("token") || "";
-
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [relatedProducts, setRelatedProducts] = useState<Record<string, any[]>>({});
 
