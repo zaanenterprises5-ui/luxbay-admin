@@ -4,11 +4,19 @@
  * - Production: uses HTTPS backend
  */
 export function getApiUrl(): string {
-  // Check if we're in browser and on localhost
-  if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
-    return 'http://localhost:5002/api';
+  // If an environment variable is set, prefer it (works for SSR and prod/dev)
+  if (process.env.NEXT_PUBLIC_API_URL) {
+    return process.env.NEXT_PUBLIC_API_URL;
   }
-  
-  // Use environment variable if available, otherwise use production backend
-  return process.env.NEXT_PUBLIC_API_URL || 'https://x-emirates-backend.onrender.com/api';
+
+  // In the browser, prefer a local backend when developing on localhost/127.0.0.1
+  if (typeof window !== 'undefined') {
+    const host = window.location.hostname;
+    if (host === 'localhost' || host === '127.0.0.1') {
+      return 'http://localhost:5002/api';
+    }
+  }
+
+  // Fallback production backend (update if your backend domain differs)
+  return 'https://lexvaro-backend.onrender.com/api';
 }
