@@ -10,5 +10,5 @@ export function getApiUrl(): string {
   }
   
   // Use environment variable if available, otherwise use production backend
-  return process.env.NEXT_PUBLIC_API_URL || 'https://x-emirates-backend.onrender.com/api';
+  return process.env.NEXT_PUBLIC_API_URL || 'https://api.lexvaro.in/api';
 }
