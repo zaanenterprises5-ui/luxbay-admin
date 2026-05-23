@@ -40,6 +40,24 @@ export default function Categories() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const api = getApiUrl();
+  // derive API base (remove trailing /api) to resolve relative image paths
+  const apiBase = api.replace(/\/api\/?$/, '');
+
+  const resolveImageUrl = (raw?: string | null) => {
+    if (!raw) return undefined;
+    // already data URL
+    if (raw.startsWith('data:')) return raw;
+    // protocol-relative
+    if (raw.startsWith('//')) return `https:${raw}`;
+    // force https for http urls
+    if (raw.startsWith('http://')) return raw.replace('http://', 'https://');
+    if (raw.startsWith('https://')) return raw;
+    // relative path (served from API host)
+    if (raw.startsWith('/')) return `${apiBase}${raw}`;
+    // fallback: if it looks like a domain/path but missing protocol
+    if (raw.includes('.') && !raw.includes(' ')) return `https://${raw}`;
+    return raw;
+  };
   const token = () => localStorage.getItem("token") || "";
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [relatedProducts, setRelatedProducts] = useState<Record<string, any[]>>({});
@@ -179,18 +197,20 @@ export default function Categories() {
         {categories.length === 0 && (
           <p style={{ color: "#44445a", fontSize: 13 }}>No categories yet.</p>
         )}
-        {categories.map(cat => (
+        {categories.map(cat => {
+          const catImageUrl = resolveImageUrl(cat.image);
+          return (
           <div 
             key={cat._id} 
             className={`card${expandedId === cat._id ? " active-card" : ""}`} 
             style={{ padding: 20, cursor: "pointer", position: "relative" }}
             onClick={() => handleCategoryClick(cat._id)}
           >
-            {cat.image && (
+            {catImageUrl ? (
               <div style={{ marginBottom: 12, borderRadius: 8, overflow: "hidden", height: 100, position: "relative", background: "#0f0f13" }}>
-                <Image src={cat.image} alt={cat.name} fill style={{ objectFit: "cover" }} unoptimized />
+                <Image src={catImageUrl} alt={cat.name} fill style={{ objectFit: "cover" }} unoptimized />
               </div>
-            )}
+            ) : null}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 }}>
               <div style={{ fontWeight: 600, fontSize: 14, color: "#e8e8f0", wordBreak: "break-word" }}>{cat.name}</div>
               <button 
@@ -212,7 +232,7 @@ export default function Categories() {
                       return (
                         <div key={idx} style={{ flex: 1, position: "relative", aspectRatio: "1/1", borderRadius: 6, overflow: "hidden", background: "#0a0a0f", border: "1px solid #1e1e2e" }}>
                           {img ? (
-                            <Image src={img} alt={p.name} fill style={{ objectFit: "cover" }} />
+                            <Image src={resolveImageUrl(img) || img} alt={p.name} fill style={{ objectFit: "cover" }} unoptimized />
                           ) : (
                             <div style={{ height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10 }}>📦</div>
                           )}
