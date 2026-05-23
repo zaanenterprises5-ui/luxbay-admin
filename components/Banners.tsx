@@ -2,6 +2,7 @@
 import { useState, useEffect, useCallback, ReactNode } from "react";
 import Image from "next/image";
 import { fetchWithAuth } from "../lib/fetchWithAuth";
+import { getApiUrl } from "../lib/getApiUrl";
 
 type Banner = {
   _id: string;
@@ -26,7 +27,7 @@ export default function Banners() {
   const [mobileFit, setMobileFit] = useState("cover");
   const [mobilePosition, setMobilePosition] = useState("center");
   const [loading, setLoading] = useState(false);
-  const api = process.env.NEXT_PUBLIC_API_URL || 'https://lexvaro-backend.onrender.com/api';
+  const api = getApiUrl();
 
   const fetchBanners = useCallback(async () => {
     try {

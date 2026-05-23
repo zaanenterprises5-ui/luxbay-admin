@@ -2,6 +2,7 @@
 import { useState, useEffect, useCallback, ReactNode } from "react";
 import Image from "next/image";
 import { fetchWithAuth } from "../lib/fetchWithAuth";
+import { getApiUrl } from "../lib/getApiUrl";
 
 type Category = { _id: string; name: string; image?: string };
 
@@ -38,19 +39,107 @@ export default function Categories() {
   const [name, setName] = useState("");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
-  const api = process.env.NEXT_PUBLIC_API_URL || 'https://lexvaro-backend.onrender.com/api';
-  const token = () => localStorage.getItem("token") || "";
+  const api = getApiUrl();
+  // derive API base (remove trailing /api) to resolve relative image paths
+  const apiBase = api.replace(/\/api\/?$/, '');
 
+  const resolveImageUrl = (raw?: any) => {
+    if (!raw) return undefined;
+
+    // If the DB stored an object (e.g., { secure_url } from cloudinary or { data, contentType })
+    if (typeof raw === 'object') {
+      // Cloudinary response
+      if (raw.secure_url) return raw.secure_url;
+      if (raw.secureUrl) return raw.secureUrl;
+      if (raw.url) return raw.url;
+      if (raw.path) return raw.path;
+
+      // If image stored as buffer-like: { data: <Array>|{type:'Buffer',data:[...]}, contentType }
+      const contentType = raw.contentType || raw.content_type || raw.mimetype || 'image/png';
+      const dataField = raw.data || raw.buffer || (raw.data && raw.data.data) || null;
+
+      if (dataField) {
+        try {
+          // base64 string
+          if (typeof dataField === 'string') {
+            const base = dataField.includes(',') ? dataField.split(',')[1] : dataField;
+            return `data:${contentType};base64,${base}`;
+          }
+
+          // Buffer-like array
+          let arr: number[] | null = null;
+          if (Array.isArray(dataField)) arr = dataField as number[];
+          else if (dataField.type === 'Buffer' && Array.isArray(dataField.data)) arr = dataField.data;
+          else if (Array.isArray((raw as any).data)) arr = (raw as any).data;
+
+          if (arr && arr.length) {
+            // convert byte array to base64 (chunked)
+            let binary = '';
+            const chunkSize = 0x8000; // 32768
+            for (let i = 0; i < arr.length; i += chunkSize) {
+              const chunk = arr.slice(i, i + chunkSize);
+              binary += String.fromCharCode.apply(null, chunk as any);
+            }
+            return `data:${contentType};base64,${btoa(binary)}`;
+          }
+        } catch (e) {
+          console.error('resolveImageUrl (buffer->base64) failed', e);
+        }
+      }
+
+      // last resort: try toString
+      try {
+        const s = String(raw);
+        if (s && s.includes('.')) return s;
+      } catch (e) {}
+
+      return undefined;
+    }
+
+    // string handling
+    if (typeof raw === 'string') {
+      if (!raw) return undefined;
+      if (raw.startsWith('data:')) return raw;
+      if (raw.startsWith('//')) return `https:${raw}`;
+      if (raw.startsWith('http://')) return raw.replace('http://', 'https://');
+      if (raw.startsWith('https://')) return raw;
+      if (raw.startsWith('/')) return `${apiBase}${raw}`;
+      if (raw.includes('.') && !raw.includes(' ')) return `https://${raw}`;
+      return raw;
+    }
+
+    return undefined;
+  };
+  const token = () => localStorage.getItem("token") || "";
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [relatedProducts, setRelatedProducts] = useState<Record<string, any[]>>({});
 
   const fetchCategories = useCallback(async () => {
     try {
-      const res = await fetch(`${api}/category`);
+      const res = await fetchWithAuth(`${api}/category`);
+      if(!res.ok){
+        throw new Error("Category fetch failed");
+      }
       const data = await res.json();
-      if (data.categories) setCategories(data.categories);
-    } catch (e) { console.error(e); }
-  }, [api]);
+      console.log("CATEGORY DATA:",data);
+      if(Array.isArray(data)){
+        setCategories(data);
+      }
+      else if(
+        data && (data as any).categories &&
+        Array.isArray((data as any).categories)
+      ){
+        setCategories((data as any).categories);
+      }
+      else{
+        setCategories([]);
+      }
+    }
+    catch(e){
+      console.error("CATEGORY ERROR:",e);
+      setCategories([]);
+    }
+  },[api]);
 
   const fetchRelatedProducts = async (catId: string) => {
     if (relatedProducts[catId]) return;
@@ -117,7 +206,7 @@ export default function Categories() {
               : c
           ));
           // refetch to get the new cloudinary URL
-          fetchCategories();
+          	fetchCategories();
           setShowModal(false);
         } else {
           alert((data.error || "Failed to save.") + (data.message ? "\n\n" + data.message : ""));
@@ -170,22 +259,28 @@ export default function Categories() {
         <button className="btn-primary" onClick={openAdd}>+ Add New</button>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(220px,1fr))", gap: 16 }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        <div style={{ color: "white", fontSize: 18, marginBottom: 10 }}>
+          Count: {categories.length}
+        </div>
+
         {categories.length === 0 && (
           <p style={{ color: "#44445a", fontSize: 13 }}>No categories yet.</p>
         )}
-        {categories.map(cat => (
+        {categories.map(cat => {
+          const catImageUrl = resolveImageUrl(cat.image);
+          return (
           <div 
             key={cat._id} 
             className={`card${expandedId === cat._id ? " active-card" : ""}`} 
             style={{ padding: 20, cursor: "pointer", position: "relative" }}
             onClick={() => handleCategoryClick(cat._id)}
           >
-            {cat.image && (
+            {catImageUrl ? (
               <div style={{ marginBottom: 12, borderRadius: 8, overflow: "hidden", height: 100, position: "relative", background: "#0f0f13" }}>
-                <Image src={cat.image} alt={cat.name} fill style={{ objectFit: "cover" }} unoptimized />
+                <Image src={catImageUrl} alt={cat.name} fill style={{ objectFit: "cover" }} unoptimized />
               </div>
-            )}
+            ) : null}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 }}>
               <div style={{ fontWeight: 600, fontSize: 14, color: "#e8e8f0", wordBreak: "break-word" }}>{cat.name}</div>
               <button 
@@ -207,7 +302,7 @@ export default function Categories() {
                       return (
                         <div key={idx} style={{ flex: 1, position: "relative", aspectRatio: "1/1", borderRadius: 6, overflow: "hidden", background: "#0a0a0f", border: "1px solid #1e1e2e" }}>
                           {img ? (
-                            <Image src={img} alt={p.name} fill style={{ objectFit: "cover" }} />
+                            <Image src={resolveImageUrl(img) || img} alt={p.name} fill style={{ objectFit: "cover" }} unoptimized />
                           ) : (
                             <div style={{ height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10 }}>📦</div>
                           )}
@@ -229,7 +324,8 @@ export default function Categories() {
               <div style={{ fontSize: 10, color: "#44445a" }}>{expandedId === cat._id ? "Collapse" : "Click to view products"}</div>
             </div>
           </div>
-        ))}
+          );
+        })}
       </div>
 
       {showModal && (

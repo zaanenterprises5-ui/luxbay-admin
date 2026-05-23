@@ -1,12 +1,13 @@
 "use client";
+
 import { useState, useEffect, useCallback, ReactNode } from "react";
+import { getApiUrl } from "../lib/getApiUrl";
 
 /* ================= TYPES ================= */
 
 type Category = {
   _id: string;
   name: string;
- 
   color?: string;
   count?: number;
 };
@@ -35,7 +36,7 @@ export default function Categories() {
   const [showModal, setShowModal] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
   const [form, setForm] = useState<FormType>({ name: "" });
-  const api = process.env.NEXT_PUBLIC_API_URL || 'https://lexvaro-backend.onrender.com/api';
+  const api = getApiUrl();
 
   const fetchCategories = useCallback(async () => {
     fetch(`${api}/category`)

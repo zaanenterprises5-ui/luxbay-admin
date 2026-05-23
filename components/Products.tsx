@@ -2,6 +2,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { fetchWithAuth } from "../lib/fetchWithAuth";
+import { getApiUrl } from "../lib/getApiUrl";
 
 /* ─── Types ─────────────────────────────────────────── */
 type SizeEntry = { size: string; stock: string; price: string };
@@ -62,7 +63,7 @@ export default function Products() {
   const [categoryId, setCategoryId] = useState("");
   const [subcategoryId, setSubcategoryId] = useState("");
   const [variants, setVariants] = useState<Variant[]>([{ ...BLANK_VARIANT(), isDefault: true }]);
-  const api = process.env.NEXT_PUBLIC_API_URL || 'https://lexvaro-backend.onrender.com/api';
+  const api = getApiUrl();
 
   const fetchProducts = useCallback(async () => {
     try {
