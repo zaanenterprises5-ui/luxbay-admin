@@ -63,17 +63,48 @@ export default function Categories() {
   const [relatedProducts, setRelatedProducts] = useState<Record<string, any[]>>({});
 
   const fetchCategories = useCallback(async () => {
-  try {
-    const res = await fetch(`${api}/category`);
-    const data = await res.json();
 
-    console.log("CATEGORY DATA:", data);
+    try {
 
-    if (data.categories) setCategories(data.categories);
-  } catch (e) {
-    console.error(e);
-  }
-}, [api]);
+      const res = await fetch(`${api}/category`);
+
+      if(!res.ok){
+        throw new Error("Category fetch failed");
+      }
+
+      const data = await res.json();
+
+      console.log("CATEGORY DATA:",data);
+
+      if(Array.isArray(data)){
+
+        setCategories(data);
+
+      }
+      else if(
+        data && (data as any).categories &&
+        Array.isArray((data as any).categories)
+      ){
+
+        setCategories((data as any).categories);
+
+      }
+      else{
+
+        setCategories([]);
+
+      }
+
+    }
+    catch(e){
+
+      console.error("CATEGORY ERROR:",e);
+
+      setCategories([]);
+
+    }
+
+  },[api]);
 
   const fetchRelatedProducts = async (catId: string) => {
     if (relatedProducts[catId]) return;
