@@ -1,12 +1,13 @@
 "use client";
-import { useState, useEffect, useCallback, ReactNode } from \"react\";\nimport { getApiUrl } from \"../lib/getApiUrl\";
+
+import { useState, useEffect, useCallback, ReactNode } from "react";
+import { getApiUrl } from "../lib/getApiUrl";
 
 /* ================= TYPES ================= */
 
 type Category = {
   _id: string;
   name: string;
- 
   color?: string;
   count?: number;
 };
