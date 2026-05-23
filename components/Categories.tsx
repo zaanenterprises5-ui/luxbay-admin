@@ -66,7 +66,7 @@ export default function Categories() {
 
     try {
 
-      const res = await fetch(`${api}/category`);
+      const res = await fetchWithAuth(`${api}/category`);
 
       if(!res.ok){
         throw new Error("Category fetch failed");
