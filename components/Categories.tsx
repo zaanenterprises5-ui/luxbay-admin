@@ -259,7 +259,11 @@ export default function Categories() {
         <button className="btn-primary" onClick={openAdd}>+ Add New</button>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(220px,1fr))", gap: 16 }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        <div style={{ color: "white", fontSize: 18, marginBottom: 10 }}>
+          Count: {categories.length}
+        </div>
+
         {categories.length === 0 && (
           <p style={{ color: "#44445a", fontSize: 13 }}>No categories yet.</p>
         )}
