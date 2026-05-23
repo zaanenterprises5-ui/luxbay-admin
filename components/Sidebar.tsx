@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
 import { getApiUrl } from "../lib/getApiUrl";
+import fetchWithAuth from "../lib/fetchWithAuth";
 
 interface SidebarProps {
   isSidebarOpen: boolean;
@@ -99,6 +100,28 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
         }
       }
       if (img) setUserImage(resolveImageUrl(img) || null);
+      else {
+        // If no avatar in localStorage, try fetching current user from API
+        const token = localStorage.getItem('token');
+        if (token) {
+          (async () => {
+            try {
+              const res = await fetchWithAuth(`${api}/user/me`);
+              if (!res.ok) return;
+              const data = await res.json().catch(() => null);
+              const u = data?.user || data;
+              const avatar = u?.avatar || u?.image || u?.photo || null;
+              if (avatar) {
+                try { localStorage.setItem('user', JSON.stringify(u)); } catch (e) {}
+                setUserImage(resolveImageUrl(avatar) || null);
+              }
+              if (u?.email) setUserEmail(u.email);
+            } catch (e) {
+              // ignore
+            }
+          })();
+        }
+      }
     }
   }, []);
 

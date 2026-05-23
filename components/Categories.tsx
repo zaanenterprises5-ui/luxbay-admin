@@ -223,7 +223,7 @@ export default function Categories() {
               : c
           ));
           // refetch to get the new cloudinary URL
-          fetchCategories();
+          	fetchCategories();
           setShowModal(false);
         } else {
           alert((data.error || "Failed to save.") + (data.message ? "\n\n" + data.message : ""));
