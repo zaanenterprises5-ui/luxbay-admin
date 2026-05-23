@@ -254,7 +254,8 @@ export default function Categories() {
               <div style={{ fontSize: 10, color: "#44445a" }}>{expandedId === cat._id ? "Collapse" : "Click to view products"}</div>
             </div>
           </div>
-        ))}
+          );
+        })}
       </div>
 
       {showModal && (
