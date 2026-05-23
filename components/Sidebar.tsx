@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
+import { getApiUrl } from "../lib/getApiUrl";
 
 interface SidebarProps {
   isSidebarOpen: boolean;
@@ -59,11 +60,45 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
   const pathname = usePathname();
 
   const [userEmail, setUserEmail] = useState("admin@lexvaro.com");
+  const [userImage, setUserImage] = useState<string | null>(null);
+
+  const api = getApiUrl();
+  const apiBase = api.replace(/\/api\/?$/, '');
+
+  const resolveImageUrl = (raw?: string | null) => {
+    if (!raw) return undefined;
+    if (raw.startsWith('data:')) return raw;
+    if (raw.startsWith('//')) return `https:${raw}`;
+    if (raw.startsWith('http://')) return raw.replace('http://', 'https://');
+    if (raw.startsWith('https://')) return raw;
+    if (raw.startsWith('/')) return `${apiBase}${raw}`;
+    if (raw.includes('.') && !raw.includes(' ')) return `https://${raw}`;
+    return raw;
+  };
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       const email = localStorage.getItem("email");
       if (email) setUserEmail(email);
+
+      // attempt to read profile image from common localStorage keys
+      const keys = ["image", "avatar", "profileImage", "photo", "avatarUrl"];
+      let img: string | null = null;
+      for (const k of keys) {
+        const v = localStorage.getItem(k);
+        if (v) { img = v; break; }
+      }
+      // also check serialized user object
+      if (!img) {
+        const userJson = localStorage.getItem('user');
+        if (userJson) {
+          try {
+            const u = JSON.parse(userJson);
+            img = u?.image || u?.avatar || u?.profileImage || u?.photo || u?.avatarUrl || null;
+          } catch (e) { /* ignore */ }
+        }
+      }
+      if (img) setUserImage(resolveImageUrl(img) || null);
     }
   }, []);
 
@@ -406,7 +441,20 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
         {/* Footer Section */}
         <div className="sidebar-footer">
           <div className="user-profile">
-            <div className="user-avatar">{userEmail.charAt(0).toUpperCase()}</div>
+            <div className="user-avatar">
+              {userImage ? (
+                <Image
+                  src={userImage}
+                  alt={userEmail}
+                  width={32}
+                  height={32}
+                  style={{ objectFit: 'cover', borderRadius: '50%' }}
+                  unoptimized
+                />
+              ) : (
+                userEmail.charAt(0).toUpperCase()
+              )}
+            </div>
             <div className="user-info">
               <p className="user-name">Admin</p>
               <p className="user-email">{userEmail}</p>
