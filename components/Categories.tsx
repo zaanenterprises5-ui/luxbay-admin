@@ -252,11 +252,21 @@ export default function Categories() {
         if (imagePreview && imagePreview.startsWith("data:image")) {
           updatePayload.image = imagePreview;
         }
-        const res = await fetchWithAuth(`${api}/category/${editId}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ category: updatePayload }),
-        });
+        
+
+         const res = await fetchWithAuth(`${api}/category/${editId}`, {
+
+  method: "PUT",
+
+  headers: {
+    "Content-Type": "application/json"
+  },
+
+  body: JSON.stringify({
+    category: updatePayload
+  })
+
+});
         const data = await res.json();
         if (data.success) {
           setCategories(prev => prev.map(c =>
