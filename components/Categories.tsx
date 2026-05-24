@@ -44,7 +44,66 @@ export default function Categories() {
   const apiBase = api.replace(/\/api\/?$/, '');
 
   const resolveImageUrl = (raw?: any) => {
-    if (!raw) return undefined;
+  const resolveImageUrl = (raw?: any) => {
+
+ if (!raw) return undefined;
+
+ if (typeof raw === "string") {
+
+   if (raw.startsWith("data:image")) {
+     return raw;
+   }
+
+   if (raw.startsWith("http")) {
+     return raw;
+   }
+
+ }
+
+ // If DB stored object
+ if (typeof raw === "object") {
+
+   if (raw.secure_url) return raw.secure_url;
+   if (raw.secureUrl) return raw.secureUrl;
+   if (raw.url) return raw.url;
+   if (raw.path) return raw.path;
+
+   const contentType =
+     raw.contentType ||
+     raw.content_type ||
+     raw.mimetype ||
+     "image/png";
+
+   const dataField =
+     raw.data ||
+     raw.buffer ||
+     (raw.data && raw.data.data) ||
+     null;
+
+   if (dataField) {
+
+     try {
+
+       if (typeof dataField === "string") {
+
+         const base =
+           dataField.includes(",")
+             ? dataField.split(",")[1]
+             : dataField;
+
+         return `data:${contentType};base64,${base}`;
+
+       }
+
+     } catch {}
+
+   }
+
+ }
+
+ return undefined;
+
+}
 
     // If the DB stored an object (e.g., { secure_url } from cloudinary or { data, contentType })
     if (typeof raw === 'object') {
