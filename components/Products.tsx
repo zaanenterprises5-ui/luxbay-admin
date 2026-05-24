@@ -74,33 +74,26 @@ export default function Products() {
   }, [api]);
 
  const fetchCategories = useCallback(async () => {
-
   try {
-
     const res = await fetch(`${api}/category`);
-
     const data = await res.json();
-
     console.log("CATEGORY RESPONSE:", data);
-
-    if (data.categories) {
-
+    if (Array.isArray(data)) {
+      setCategories(data);
+    } else if (data.categories) {
       setCategories(data.categories);
 
     } else {
-
+      setCategories([]);
       console.log("NO CATEGORIES FOUND");
-
     }
-
   } catch (e) {
-
     console.error("CATEGORY ERROR:", e);
-
   }
-
 }, [api]);
-  const fetchSubcategories = useCallback(async () => {
+  
+
+const fetchSubcategories = useCallback(async () => {
     try {
       const res = await fetch(`${api}/subcategory`);
       const data = await res.json();
