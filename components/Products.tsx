@@ -73,14 +73,33 @@ export default function Products() {
     } catch (e) { console.error(e); }
   }, [api]);
 
-  const fetchCategories = useCallback(async () => {
-    try {
-      const res = await fetch(`${api}/category`);
-      const data = await res.json();
-      if (data.categories) setCategories(data.categories);
-    } catch (e) { console.error(e); }
-  }, [api]);
+ const fetchCategories = useCallback(async () => {
 
+  try {
+
+    const res = await fetch(`${api}/category`);
+
+    const data = await res.json();
+
+    console.log("CATEGORY RESPONSE:", data);
+
+    if (data.categories) {
+
+      setCategories(data.categories);
+
+    } else {
+
+      console.log("NO CATEGORIES FOUND");
+
+    }
+
+  } catch (e) {
+
+    console.error("CATEGORY ERROR:", e);
+
+  }
+
+}, [api]);
   const fetchSubcategories = useCallback(async () => {
     try {
       const res = await fetch(`${api}/subcategory`);
