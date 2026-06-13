@@ -279,7 +279,7 @@ export default function Categories() {
             onClick={() => handleCategoryClick(cat._id)}
           >
             {catImageUrl ? (
-              <div style={{ marginBottom: 12, borderRadius: 8, overflow: "hidden", height: 100, position: "relative", background: "#0f0f13" }}>
+              <div style={{ marginBottom: 12, borderRadius: 8, overflow: "hidden", width: "100%", minHeight: 120, aspectRatio: "4 / 1", position: "relative", background: "#0f0f13" }}>
                 <Image src={catImageUrl} alt={cat.name} fill style={{ objectFit: "cover" }} unoptimized />
               </div>
             ) : null}

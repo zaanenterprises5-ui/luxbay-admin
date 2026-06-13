@@ -97,12 +97,12 @@ export default function LoginPage() {
         boxShadow: "0 30px 80px rgba(0,0,0,0.35)"
       }}>
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '18px' }}>
-          <img src="/images/logo.svg" alt="Luxbay" width={120} height={36} style={{ objectFit: 'contain' }} />
+          <img src="/images/logo.svg" alt="Luxbae" width={120} height={36} style={{ objectFit: 'contain' }} />
         </div>
         <h1 style={{ color: "#f8fafc", marginBottom: "18px", fontFamily: "'Syne', sans-serif", fontSize: "28px", textAlign: "center" }}>
-          Luxbay Admin
+          Luxbae Admin
         </h1>
-        <p style={{ color: '#9ca3af', textAlign: 'center', marginBottom: '26px', lineHeight: 1.6 }}>Manage brands, products, categories and banners with the Luxbay red & black dashboard.</p>
+        <p style={{ color: '#9ca3af', textAlign: 'center', marginBottom: '26px', lineHeight: 1.6 }}>Manage brands, products, categories and banners with the Luxbae red & black dashboard.</p>
 
         {error && (
           <div style={{ background: "#ef444420", color: "#ef4444", padding: "12px", borderRadius: "8px", marginBottom: "20px", fontSize: "14px" }}>

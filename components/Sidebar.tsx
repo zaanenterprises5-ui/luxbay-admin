@@ -60,7 +60,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
   const router = useRouter();
   const pathname = usePathname();
 
-  const [userEmail, setUserEmail] = useState("admin@luxbay.com");
+  const [userEmail, setUserEmail] = useState("admin@luxbae.com");
   const [userImage, setUserImage] = useState<string | null>(null);
 
   const api = getApiUrl();
@@ -149,6 +149,8 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
           left: 0;
           top: 0;
           width: 240px;
+          max-width: 100%;
+          min-width: 0;
           height: 100vh;
           background: #080809;
           border-right: 1px solid #1f1f29;
@@ -162,6 +164,10 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
           overflow-y: auto;
           font-family: 'DM Sans', sans-serif;
           box-shadow: 2px 0 18px rgba(0, 0, 0, 0.45);
+        }
+        .nav-item span {
+          flex: 1;
+          min-width: 0;
         }
 
         .sidebar.open {
@@ -355,7 +361,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
         /* Mobile adjustments */
         @media (max-width: 767px) {
           .sidebar {
-            width: 220px;
+            width: min(80vw, 260px);
           }
 
           .sidebar-header {
@@ -363,14 +369,14 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
           }
 
           .nav-item {
-            padding: 10px 24px;
+            padding: 10px 20px;
             margin: 0;
             border-radius: 0;
             font-size: 13px;
           }
 
           .sidebar-footer {
-            padding: 16px 24px;
+            padding: 16px 20px;
           }
         }
 
@@ -419,7 +425,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
           }}>
             <img
               src="/images/logo.svg"
-              alt="Luxbay Admin"
+              alt="Luxbae Admin"
               width="84"
               height="84"
               style={{ objectFit: 'contain', width: '100%', height: '100%' }}

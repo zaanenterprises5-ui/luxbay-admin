@@ -122,23 +122,20 @@ export default function Banners() {
       
         // .upload-box:hover { border-color: #7c3aed; }
         .upload-input { display: none; }
-        .banner-card-container { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
-        .banner-preview-wrapper { display: flex; gap: 12px; align-items: center; flex: 1; min-width: 0; }
-        .banner-preview-item { display: flex; flex-direction: column; gap: 4px; }
+        .banner-card { width: 100%; display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between; }
+        .banner-preview-wrapper { display: flex; gap: 12px; align-items: center; flex: 1; min-width: 0; flex-wrap: wrap; }
+        .banner-preview-item { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
         .banner-preview-label { font-size: 10px; font-weight: 600; color: #44445a; text-transform: uppercase; letter-spacing: 0.05em; }
-        .banner-preview-image { background: #0a0a0f; border-radius: 8px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-        
-        /* Mobile - stack layout */
+        .banner-preview-image { background: #0a0a0f; border-radius: 8px; overflow: hidden; display: flex; align-items: center; justify-content: center; width: 100%; max-width: 240px; aspect-ratio: 2 / 1; min-height: 120px; position: relative; }
+        .banner-preview-image.mobile-preview { max-width: 120px; aspect-ratio: 2 / 3; min-height: 120px; }
+        .banner-actions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; justify-content: flex-end; min-width: 0; }
         @media (max-width: 768px) {
-          .banner-card { flex-direction: column !important; gap: 12px !important; padding: 12px !important; }
-          .banner-preview-wrapper { flex-direction: column; gap: 12px; }
-          .banner-preview-item { width: 100%; }
-          .banner-preview-image { width: 100%; height: 150px !important; }
-          .banner-actions { flex-direction: column !important; gap: 12px; }
-          .btn-primary { width: 100%; }
-          .btn-ghost { width: 100%; }
-        }
-        
+          .banner-card { flex-direction: column; align-items: stretch; gap: 12px; padding: 12px; }
+          .banner-preview-wrapper { width: 100%; flex-direction: column; gap: 12px; }
+          .banner-preview-item { width: 100%; max-width: 100%; }
+          .banner-preview-image { width: 100%; max-width: 100%; }
+          .banner-actions { width: 100%; justify-content: stretch; flex-direction: column; gap: 12px; }
+          .btn-primary, .btn-ghost { width: 100%; }
         /* Extra small - further optimization */
         @media (max-width: 640px) {
           .overlay { padding: 12px; }
@@ -185,7 +182,7 @@ export default function Banners() {
               {/* Desktop preview */}
               <div className="banner-preview-item">
                 <span className="banner-preview-label">Desktop</span>
-                <div className="banner-preview-image" style={{ width: "240px", height: "120px" }}>
+                <div className="banner-preview-image">
                   <Image src={banner.desktopImage} alt="desktop banner" width={240} height={120} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                 </div>
               </div>
@@ -193,7 +190,7 @@ export default function Banners() {
               {/* Mobile preview */}
               <div className="banner-preview-item">
                 <span className="banner-preview-label">Mobile</span>
-                <div className="banner-preview-image" style={{ width: "80px", height: "120px" }}>
+                <div className="banner-preview-image mobile-preview">
                   <Image src={banner.mobileImage} alt="mobile banner" width={80} height={120} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                 </div>
               </div>
@@ -235,7 +232,8 @@ export default function Banners() {
                   ) : (
                     <div style={{ padding: "30px 0" }}>
                       <div style={{ fontSize: 13, color: "#555570", fontWeight: 500 }}>📁 Click to upload desktop image</div>
-                      <div style={{ fontSize: 11, color: "#44445a", marginTop: 6 }}>Recommended: 1920x400px</div>
+                      <div style={{ fontSize: 11, color: "#44445a", marginTop: 6 }}>Perfect size: 1920×400px</div>
+                      <div style={{ fontSize: 11, color: "#71717a", marginTop: 4 }}>Use a wide banner with a 16:3 ratio for best desktop fit.</div>
                     </div>
                   )}
                   <input className="upload-input" type="file" accept="image/*" onChange={(e) => handleFile(e, "desktop")} />
@@ -279,7 +277,8 @@ export default function Banners() {
                   ) : (
                     <div style={{ padding: "30px 0" }}>
                       <div style={{ fontSize: 13, color: "#555570", fontWeight: 500 }}>📱 Click to upload mobile image</div>
-                      <div style={{ fontSize: 11, color: "#44445a", marginTop: 6 }}>Recommended: 540x600px</div>
+                      <div style={{ fontSize: 11, color: "#44445a", marginTop: 6 }}>Perfect size: 540×600px</div>
+                      <div style={{ fontSize: 11, color: "#71717a", marginTop: 4 }}>Use a tall, portrait-style image so mobile retains the main subject.</div>
                     </div>
                   )}
                   <input className="upload-input" type="file" accept="image/*" onChange={(e) => handleFile(e, "mobile")} />

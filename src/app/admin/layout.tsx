@@ -120,6 +120,7 @@ export default function AdminLayout({
           flexDirection: "column",
           position: "relative",
           width: "100%",
+          minWidth: 0,
           backdropFilter: "blur(8px)",
           background: "rgba(10, 10, 14, 0.8)",
         }}
@@ -152,8 +153,16 @@ export default function AdminLayout({
 
         <style>{`
           @media (max-width: 768px) {
+            main {
+              padding-top: 84px !important;
+            }
+            .sidebar-wrapper {
+              width: min(80vw, 260px);
+            }
             .menu-toggle {
               display: block !important;
+              top: 8px !important;
+              left: 8px !important;
             }
             .menu-toggle:active {
               background: #2a2a3a;

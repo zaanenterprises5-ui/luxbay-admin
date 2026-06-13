@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Luxbay Admin",
+  title: "Luxbae Admin",
   description: "Admin control center for managing products, categories, and banners",
   themeColor: "#ef4444",
   icons: {

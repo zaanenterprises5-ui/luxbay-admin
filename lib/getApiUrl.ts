@@ -17,5 +17,5 @@ export function getApiUrl(): string {
     }
   }
 
-  return 'https://api.luxbay.in/api';
+  return 'https://api.luxbae.in/api';
 }
