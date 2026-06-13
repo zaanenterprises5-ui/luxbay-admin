@@ -84,20 +84,25 @@ export default function LoginPage() {
       alignItems: "center",
       justifyContent: "center",
       height: "100vh",
-      background: "#0f0f13",
+      background: "radial-gradient(circle at top left, rgba(239,68,68,0.17), transparent 20%), radial-gradient(circle at bottom right, rgba(255,255,255,0.05), transparent 18%), #050507",
       fontFamily: "'DM Sans', sans-serif"
     }}>
       <div style={{
-        background: "#13131a",
+        background: "linear-gradient(180deg, #14141a 0%, #0f0f13 100%)",
         padding: "40px",
-        borderRadius: "12px",
-        border: "1px solid #1e1e2e",
+        borderRadius: "18px",
+        border: "1px solid rgba(255, 255, 255, 0.08)",
         width: "100%",
-        maxWidth: "400px"
+        maxWidth: "420px",
+        boxShadow: "0 30px 80px rgba(0,0,0,0.35)"
       }}>
-        <h1 style={{ color: "#fff", marginBottom: "24px", fontFamily: "'Syne', sans-serif", fontSize: "24px", textAlign: "center" }}>
-          LEXVARO ADMIN
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '18px' }}>
+          <img src="/images/logo.svg" alt="Luxbay" width={120} height={36} style={{ objectFit: 'contain' }} />
+        </div>
+        <h1 style={{ color: "#f8fafc", marginBottom: "18px", fontFamily: "'Syne', sans-serif", fontSize: "28px", textAlign: "center" }}>
+          Luxbay Admin
         </h1>
+        <p style={{ color: '#9ca3af', textAlign: 'center', marginBottom: '26px', lineHeight: 1.6 }}>Manage brands, products, categories and banners with the Luxbay red & black dashboard.</p>
 
         {error && (
           <div style={{ background: "#ef444420", color: "#ef4444", padding: "12px", borderRadius: "8px", marginBottom: "20px", fontSize: "14px" }}>
@@ -151,15 +156,16 @@ export default function LoginPage() {
             disabled={loading}
             style={{
               padding: "14px",
-              background: "var(--brand)",
+              background: "#ef4444",
               color: "#fff",
               border: "none",
-              borderRadius: "8px",
+              borderRadius: "10px",
               fontSize: "14px",
-              fontWeight: 600,
+              fontWeight: 700,
               cursor: loading ? "not-allowed" : "pointer",
               marginTop: "10px",
-              opacity: loading ? 0.7 : 1
+              opacity: loading ? 0.7 : 1,
+              boxShadow: "0 10px 30px rgba(239,68,68,0.22)"
             }}
           >
             {loading ? "Logging in..." : "Login"}

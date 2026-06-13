@@ -4,11 +4,18 @@
  * - Production: uses HTTPS backend
  */
 export function getApiUrl(): string {
-  // Check if we're in browser and on localhost
-  if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
-    return 'http://localhost:5002/api';
+  // Allow explicit override from environment when available.
+  if (process.env.NEXT_PUBLIC_API_URL) {
+    return process.env.NEXT_PUBLIC_API_URL;
   }
-  
-  // Use environment variable if available, otherwise use production backend
-  return process.env.NEXT_PUBLIC_API_URL || 'https://api.lexvaro.in/api';
+
+  // Check for common local development hostnames.
+  if (typeof window !== 'undefined') {
+    const localHosts = ['localhost', '127.0.0.1', '0.0.0.0'];
+    if (localHosts.includes(window.location.hostname)) {
+      return 'http://localhost:5002/api';
+    }
+  }
+
+  return 'https://api.luxbay.in/api';
 }

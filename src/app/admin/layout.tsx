@@ -36,7 +36,7 @@ export default function AdminLayout({
       style={{
         display: "flex",
         height: "100vh",
-        background: "#0f0f13",
+        background: "radial-gradient(circle at top right, rgba(239, 68, 68, 0.18), transparent 25%), linear-gradient(180deg, #09090a 0%, #0f0f13 100%)",
         overflow: "hidden",
         flexDirection: "row",
         position: "relative",
@@ -120,6 +120,8 @@ export default function AdminLayout({
           flexDirection: "column",
           position: "relative",
           width: "100%",
+          backdropFilter: "blur(8px)",
+          background: "rgba(10, 10, 14, 0.8)",
         }}
       >
         {/* Mobile menu toggle - visible on mobile only */}

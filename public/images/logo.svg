@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 120" width="620" height="120">
+  <style>
+    .brand {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 72px;
+      font-weight: 900;
+      fill: #ffffff;
+      letter-spacing: -2px;
+    }
+    .tm {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 24px;
+      font-weight: 600;
+      fill: #ffffff;
+    }
+  </style>
+  <text x="50%" y="66%" text-anchor="middle" dominant-baseline="middle" class="brand">
+    LUXBAY
+    <tspan class="tm" dx="12" dy="-48">TM</tspan>
+  </text>
+</svg>

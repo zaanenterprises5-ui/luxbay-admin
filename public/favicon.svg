@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 120" width="400" height="120">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#000000" />
+      <stop offset="100%" stop-color="#0a0a0a" />
+    </linearGradient>
+  </defs>
+  <rect width="400" height="120" fill="url(#bg)" />
+  <style>
+    .brand {
+      font-family: 'Syne', sans-serif;
+      font-size: 80px;
+      font-weight: 800;
+      fill: #ffffff;
+      letter-spacing: -1.8px;
+    }
+    .tm {
+      font-size: 24px;
+      font-weight: 600;
+      fill: #ffffff;
+      letter-spacing: 0;
+    }
+  </style>
+  <text x="50%" y="64%" text-anchor="middle" dominant-baseline="middle" class="brand">
+    Luxbay<tspan class="tm" dx="10" dy="-42">TM</tspan>
+  </text>
+</svg>

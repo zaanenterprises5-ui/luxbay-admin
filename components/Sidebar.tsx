@@ -60,7 +60,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
   const router = useRouter();
   const pathname = usePathname();
 
-  const [userEmail, setUserEmail] = useState("admin@lexvaro.com");
+  const [userEmail, setUserEmail] = useState("admin@luxbay.com");
   const [userImage, setUserImage] = useState<string | null>(null);
 
   const api = getApiUrl();
@@ -150,8 +150,8 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
           top: 0;
           width: 240px;
           height: 100vh;
-          background: #13131a;
-          border-right: 1px solid #1e1e2e;
+          background: #080809;
+          border-right: 1px solid #1f1f29;
           display: flex;
           flex-direction: column;
           padding: 24px 0;
@@ -161,7 +161,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
           pointer-events: auto;
           overflow-y: auto;
           font-family: 'DM Sans', sans-serif;
-          box-shadow: 2px 0 15px rgba(0, 0, 0, 0.4);
+          box-shadow: 2px 0 18px rgba(0, 0, 0, 0.45);
         }
 
         .sidebar.open {
@@ -177,7 +177,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
             height: 100%;
             transform: translateX(0);
             z-index: auto;
-            border-right: 1px solid #1e1e2e;
+            border-right: 1px solid #1f1f29;
             box-shadow: none;
             flex-shrink: 0;
           }
@@ -194,7 +194,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
         /* Sidebar header/logo */
         .sidebar-header {
           padding: 0 24px 24px;
-          border-bottom: 1px solid #1e1e2e;
+          border-bottom: 1px solid #1f1f29;
         }
 
         .sidebar-logo {
@@ -202,7 +202,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
           font-size: 20px;
           font-weight: 800;
           letter-spacing: -0.02em;
-          color: #e8e8f0;
+          color: #f8fafc;
           margin: 0;
         }
 
@@ -212,7 +212,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
 
         .sidebar-subtext {
           font-size: 11px;
-          color: #44445a;
+          color: #7c7f91;
           margin-top: 2px;
           font-weight: 500;
           letter-spacing: 0.06em;
@@ -229,7 +229,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
           font-size: 10px;
           font-weight: 700;
           letter-spacing: 0.12em;
-          color: #33334a;
+          color: #44455a;
           padding: 0 24px 10px;
           text-transform: uppercase;
         }
@@ -244,7 +244,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
           font-family: 'DM Sans', sans-serif;
           font-size: 14px;
           font-weight: 500;
-          color: #666680;
+          color: #9ca3af;
           border-left: 3px solid transparent;
           transition: all 0.18s ease;
           user-select: none;
@@ -254,14 +254,14 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
         }
 
         .nav-item:hover {
-          color: #c4c4e0;
-          background: #1a1a26;
+          color: #f8fafc;
+          background: #111118;
           border-left-color: var(--brand);
         }
 
         .nav-item.active {
           color: var(--brand);
-          background: linear-gradient(90deg, rgba(190, 24, 93, 0.1) 0%, transparent 100%);
+          background: linear-gradient(90deg, rgba(239, 68, 68, 0.14) 0%, transparent 100%);
           border-left-color: var(--brand);
           font-weight: 600;
         }
@@ -279,7 +279,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
         /* Sidebar footer */
         .sidebar-footer {
           padding: 20px 24px;
-          border-top: 1px solid #1e1e2e;
+          border-top: 1px solid #1f1f29;
           margin-top: auto;
         }
 
@@ -312,7 +312,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
         .user-name {
           font-size: 13px;
           font-weight: 600;
-          color: #c4c4e0;
+          color: #e5e7eb;
           margin: 0;
           white-space: nowrap;
           overflow: hidden;
@@ -321,7 +321,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
 
         .user-email {
           font-size: 11px;
-          color: #44445a;
+          color: #7c7f91;
           margin: 0;
           white-space: nowrap;
           overflow: hidden;
@@ -331,7 +331,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
         .logout-btn {
           padding: 12px 24px;
           cursor: pointer;
-          color: #666680;
+          color: #9ca3af;
           border: none;
           background: transparent;
           border-radius: 8px;
@@ -344,12 +344,12 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
         }
 
         .logout-btn:hover {
-          color: #ff6666;
-          background: rgba(255, 68, 68, 0.05);
+          color: #fca5a5;
+          background: rgba(239, 68, 68, 0.08);
         }
 
         .logout-btn:active {
-          background: rgba(255, 68, 68, 0.1);
+          background: rgba(239, 68, 68, 0.12);
         }
 
         /* Mobile adjustments */
@@ -405,7 +405,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
         {/* Logo Section */}
         <div className="sidebar-header" style={{ textAlign: 'center', padding: '20px 16px 16px' }}>
           <div style={{
-            background: "#ffffff",
+            background: "#111111",
             borderRadius: "12px",
             padding: "8px",
             margin: "0 auto 10px",
@@ -415,15 +415,14 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
             width: "100px",
             height: "100px",
             boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
-            border: "1px solid #1e1e2e",
+            border: "1px solid rgba(255, 255, 255, 0.1)",
           }}>
-            <Image
-              src="/images/logo.png"
-              alt="Lexvaro Admin"
-              width={84}
-              height={84}
+            <img
+              src="/images/logo.svg"
+              alt="Luxbay Admin"
+              width="84"
+              height="84"
               style={{ objectFit: 'contain', width: '100%', height: '100%' }}
-              priority
             />
           </div>
           <p className="sidebar-subtext" style={{ marginTop: '4px' }}>CONTROL PANEL</p>

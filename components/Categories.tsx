@@ -39,102 +39,48 @@ export default function Categories() {
   const [name, setName] = useState("");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string>("");
   const api = getApiUrl();
   // derive API base (remove trailing /api) to resolve relative image paths
   const apiBase = api.replace(/\/api\/?$/, '');
 
   const resolveImageUrl = (raw?: any) => {
-  const resolveImageUrl = (raw?: any) => {
+    if (!raw) return undefined;
 
- if (!raw) return undefined;
+    if (typeof raw === 'string') {
+      if (raw.startsWith('data:image')) return raw;
+      if (raw.startsWith('//')) return `https:${raw}`;
+      if (raw.startsWith('http://')) return raw.replace('http://', 'https://');
+      if (raw.startsWith('https://')) return raw;
+      if (raw.startsWith('/')) return `${apiBase}${raw}`;
+      if (raw.includes('.') && !raw.includes(' ')) return `https://${raw}`;
+      return raw;
+    }
 
- if (typeof raw === "string") {
-
-   if (raw.startsWith("data:image")) {
-     return raw;
-   }
-
-   if (raw.startsWith("http")) {
-     return raw;
-   }
-
- }
-
- // If DB stored object
- if (typeof raw === "object") {
-
-   if (raw.secure_url) return raw.secure_url;
-   if (raw.secureUrl) return raw.secureUrl;
-   if (raw.url) return raw.url;
-   if (raw.path) return raw.path;
-
-   const contentType =
-     raw.contentType ||
-     raw.content_type ||
-     raw.mimetype ||
-     "image/png";
-
-   const dataField =
-     raw.data ||
-     raw.buffer ||
-     (raw.data && raw.data.data) ||
-     null;
-
-   if (dataField) {
-
-     try {
-
-       if (typeof dataField === "string") {
-
-         const base =
-           dataField.includes(",")
-             ? dataField.split(",")[1]
-             : dataField;
-
-         return `data:${contentType};base64,${base}`;
-
-       }
-
-     } catch {}
-
-   }
-
- }
-
- return undefined;
-
-}
-
-    // If the DB stored an object (e.g., { secure_url } from cloudinary or { data, contentType })
     if (typeof raw === 'object') {
-      // Cloudinary response
       if (raw.secure_url) return raw.secure_url;
       if (raw.secureUrl) return raw.secureUrl;
       if (raw.url) return raw.url;
       if (raw.path) return raw.path;
 
-      // If image stored as buffer-like: { data: <Array>|{type:'Buffer',data:[...]}, contentType }
       const contentType = raw.contentType || raw.content_type || raw.mimetype || 'image/png';
       const dataField = raw.data || raw.buffer || (raw.data && raw.data.data) || null;
 
       if (dataField) {
         try {
-          // base64 string
           if (typeof dataField === 'string') {
             const base = dataField.includes(',') ? dataField.split(',')[1] : dataField;
             return `data:${contentType};base64,${base}`;
           }
 
-          // Buffer-like array
           let arr: number[] | null = null;
           if (Array.isArray(dataField)) arr = dataField as number[];
           else if (dataField.type === 'Buffer' && Array.isArray(dataField.data)) arr = dataField.data;
           else if (Array.isArray((raw as any).data)) arr = (raw as any).data;
 
           if (arr && arr.length) {
-            // convert byte array to base64 (chunked)
             let binary = '';
-            const chunkSize = 0x8000; // 32768
+            const chunkSize = 0x8000;
             for (let i = 0; i < arr.length; i += chunkSize) {
               const chunk = arr.slice(i, i + chunkSize);
               binary += String.fromCharCode.apply(null, chunk as any);
@@ -142,29 +88,9 @@ export default function Categories() {
             return `data:${contentType};base64,${btoa(binary)}`;
           }
         } catch (e) {
-          console.error('resolveImageUrl (buffer->base64) failed', e);
+          console.error('resolveImageUrl failed', e);
         }
       }
-
-      // last resort: try toString
-      try {
-        const s = String(raw);
-        if (s && s.includes('.')) return s;
-      } catch (e) {}
-
-      return undefined;
-    }
-
-    // string handling
-    if (typeof raw === 'string') {
-      if (!raw) return undefined;
-      if (raw.startsWith('data:')) return raw;
-      if (raw.startsWith('//')) return `https:${raw}`;
-      if (raw.startsWith('http://')) return raw.replace('http://', 'https://');
-      if (raw.startsWith('https://')) return raw;
-      if (raw.startsWith('/')) return `${apiBase}${raw}`;
-      if (raw.includes('.') && !raw.includes(' ')) return `https://${raw}`;
-      return raw;
     }
 
     return undefined;
@@ -174,31 +100,32 @@ export default function Categories() {
   const [relatedProducts, setRelatedProducts] = useState<Record<string, any[]>>({});
 
   const fetchCategories = useCallback(async () => {
+    setError("");
     try {
-      const res = await fetchWithAuth(`${api}/category`);
-      if(!res.ok){
-        throw new Error("Category fetch failed");
+      const res = await fetch(`${api}/category`);
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(`Category fetch failed (${res.status}): ${text}`);
       }
+
       const data = await res.json();
-      console.log("CATEGORY DATA:",data);
-      if(Array.isArray(data)){
+      console.log("CATEGORY DATA:", data);
+
+      if (Array.isArray(data)) {
         setCategories(data);
-      }
-      else if(
-        data && (data as any).categories &&
-        Array.isArray((data as any).categories)
-      ){
+      } else if (data && Array.isArray((data as any).categories)) {
         setCategories((data as any).categories);
+      } else {
+        const message = (data && ((data as any).error || (data as any).message)) || 'Unexpected category response';
+        throw new Error(message);
       }
-      else{
-        setCategories([]);
-      }
-    }
-    catch(e){
-      console.error("CATEGORY ERROR:",e);
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : 'Unknown category fetch error';
+      console.error("CATEGORY ERROR:", message, e);
+      setError(message);
       setCategories([]);
     }
-  },[api]);
+  }, [api]);
 
   const fetchRelatedProducts = async (catId: string) => {
     if (relatedProducts[catId]) return;
@@ -327,6 +254,12 @@ export default function Categories() {
         </div>
         <button className="btn-primary" onClick={openAdd}>+ Add New</button>
       </div>
+
+      {error && (
+        <div style={{ background: '#ffeded', color: '#881b1b', padding: 14, borderRadius: 10, marginBottom: 18, border: '1px solid #f8cdd2' }}>
+          <strong>Load error:</strong> {error}
+        </div>
+      )}
 
       <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
         <div style={{ color: "white", fontSize: 18, marginBottom: 10 }}>
